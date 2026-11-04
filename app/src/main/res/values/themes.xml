@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The entire UI is drawn with Jetpack Compose; this only styles the window
+         before/behind Compose so the launch looks seamless (dark by default). -->
+    <style name="Theme.AIUBNotices" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#0E1116</item>
+        <item name="android:statusBarColor">#0E1116</item>
+        <item name="android:navigationBarColor">#0E1116</item>
+    </style>
+</resources>

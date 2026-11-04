@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AIUB Notices</string>
+
+    <!-- Notification channel -->
+    <string name="notification_channel_name">New notices</string>
+    <string name="notification_channel_description">Alerts whenever a new notice is posted on the AIUB website</string>
+    <string name="notification_summary_title">%1$d new AIUB notices</string>
+    <string name="notification_summary_text">Tap to open the AIUB notice board</string>
+
+    <!-- Notices screen -->
+    <string name="refresh_now">Refresh now</string>
+    <string name="back">Back</string>
+    <string name="open_notice">Open notice</string>
+    <string name="monitoring_started_title">Monitoring started</string>
+    <string name="monitoring_started_body">Everything currently on the notice board is marked as seen. You\'ll get a notification whenever AIUB posts a new notice.</string>
+    <string name="error_fetch_failed">Couldn\'t reach the AIUB website. Check your connection and try again.</string>
+    <string name="retry">Retry</string>
+    <string name="last_checked_format">Last checked %1$s</string>
+    <string name="last_checked_never">Not checked yet</string>
+    <string name="empty_state_title">No notices yet</string>
+    <string name="empty_state_body">Pull down to refresh, or tap the refresh icon above.</string>
+
+    <!-- Settings screen -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_notifications_section">Notifications</string>
+    <string name="settings_toggle_title">New notice alerts</string>
+    <string name="settings_toggle_subtitle">Show a heads-up notification whenever a new notice is posted on aiub.edu</string>
+    <string name="settings_interval_title">Check for new notices</string>
+    <string name="settings_interval_subtitle">Background checks also depend on your device\'s Doze and battery rules</string>
+    <string name="settings_test_notification">Send test notification</string>
+    <string name="settings_test_notification_sent">Test notification sent</string>
+    <string name="settings_test_notification_blocked">Notifications are disabled for this app</string>
+    <string name="settings_status_section">Status</string>
+    <string name="settings_background_check">Background check every %1$d minutes</string>
+    <string name="settings_background_check_off">Background checks are off</string>
+    <string name="about_section">About</string>
+    <string name="about_body">An unofficial, open-source student project that watches the public AIUB notice board so you don\'t have to. Not affiliated with American International University-Bangladesh.</string>
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AIUB brand blue -->
+    <color name="aiub_blue">#FF004EA2</color>
+    <color name="ic_launcher_background">#FF004EA2</color>
+</resources>

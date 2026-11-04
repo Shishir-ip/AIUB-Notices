@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Local SDK configuration
+local.properties
+
+# Signing material — NEVER commit
+keystore/
+
+# Local release artifacts
+dist/
+
+# OS noise
+.DS_Store
+Thumbs.db
