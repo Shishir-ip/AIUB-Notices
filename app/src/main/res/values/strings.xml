@@ -28,6 +28,11 @@
     <string name="settings_toggle_subtitle">Show a heads-up notification whenever a new notice is posted on aiub.edu</string>
     <string name="settings_interval_title">Check for new notices</string>
     <string name="settings_interval_subtitle">Background checks also depend on your device\'s Doze and battery rules</string>
+    <string name="settings_interval_realtime">Real-time</string>
+    <string name="settings_battery_prompt">For real-time alerts, allow AIUB Notices to run without battery restrictions. You can skip this — checks will still run whenever the device allows.</string>
+    <string name="settings_battery_allow">Allow</string>
+    <string name="settings_battery_skip">Skip</string>
+    <string name="settings_background_check_realtime">Real-time checks — you\'ll be notified as soon as a new notice is posted (best effort)</string>
     <string name="settings_test_notification">Send test notification</string>
     <string name="settings_test_notification_sent">Test notification sent</string>
     <string name="settings_test_notification_blocked">Notifications are disabled for this app</string>

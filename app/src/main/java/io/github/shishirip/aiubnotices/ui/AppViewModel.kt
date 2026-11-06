@@ -1,6 +1,11 @@
 package io.github.shishirip.aiubnotices.ui
 
 import android.app.Application
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.os.PowerManager
+import android.provider.Settings
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,6 +30,7 @@ data class UiState(
     val lastCheckedMillis: Long? = null,
     val notificationsEnabled: Boolean = true,
     val pollIntervalMinutes: Int = 15,
+    val batteryPromptVisible: Boolean = false,
 )
 
 /**
@@ -56,6 +62,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                         pollIntervalMinutes = settings.pollIntervalMinutes,
                     )
                 }
+                updateBatteryPrompt()
             }
         }
         viewModelScope.launch {
@@ -132,6 +139,64 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
             if (_uiState.value.notificationsEnabled) {
                 PollScheduler.schedule(app, minutes)
             }
+            if (minutes == PollScheduler.REALTIME_INTERVAL) {
+                // One fresh, skippable hint per selection — never a nag.
+                store.resetBatteryPromptDismissed()
+                updateBatteryPrompt()
+            } else {
+                _uiState.update { it.copy(batteryPromptVisible = false) }
+            }
+        }
+    }
+
+    /** Re-evaluates the battery hint; called when returning from system settings. */
+    fun refreshBatteryState() {
+        updateBatteryPrompt()
+    }
+
+    private fun updateBatteryPrompt() {
+        viewModelScope.launch {
+            val dismissed = store.isBatteryPromptDismissed()
+            val realtime = _uiState.value.pollIntervalMinutes == PollScheduler.REALTIME_INTERVAL
+            val visible = realtime && !dismissed && !isIgnoringBatteryOptimizations()
+            _uiState.update { it.copy(batteryPromptVisible = visible) }
+        }
+    }
+
+    private fun isIgnoringBatteryOptimizations(): Boolean {
+        val powerManager = app.getSystemService(PowerManager::class.java)
+        return powerManager?.isIgnoringBatteryOptimizations(app.packageName) ?: true
+    }
+
+    /** Opens the one-tap system dialog ("Allow app to always run in background?"). */
+    fun requestIgnoreBatteryOptimizations() {
+        val fallback = {
+            runCatching {
+                app.startActivity(
+                    Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+                )
+            }
+        }
+        try {
+            app.startActivity(
+                Intent(
+                    Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+                    Uri.parse("package:${app.packageName}"),
+                ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+            )
+        } catch (_: ActivityNotFoundException) {
+            fallback()
+        } catch (_: SecurityException) {
+            fallback()
+        }
+    }
+
+    /** Skips the battery hint for good (until real-time is selected again). */
+    fun dismissBatteryPrompt() {
+        viewModelScope.launch {
+            store.setBatteryPromptDismissed()
+            _uiState.update { it.copy(batteryPromptVisible = false) }
         }
     }
 

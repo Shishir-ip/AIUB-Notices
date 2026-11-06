@@ -35,6 +35,7 @@ class NoticeStore(private val context: Context) {
         val POLL_INTERVAL_MINUTES = intPreferencesKey("poll_interval_minutes")
         val CACHED_NOTICES = stringPreferencesKey("cached_notices")
         val LAST_CHECKED_MILLIS = longPreferencesKey("last_checked_millis")
+        val BATTERY_PROMPT_DISMISSED = booleanPreferencesKey("battery_prompt_dismissed")
 
         /** Seen-set size cap; oldest entries are pruned first. */
         const val MAX_SEEN_URLS = 500
@@ -90,6 +91,19 @@ class NoticeStore(private val context: Context) {
 
     suspend fun setPollIntervalMinutes(minutes: Int) {
         context.dataStore.edit { prefs -> prefs[POLL_INTERVAL_MINUTES] = minutes }
+    }
+
+    /** True when the user skipped the real-time battery hint. */
+    suspend fun isBatteryPromptDismissed(): Boolean =
+        context.dataStore.data.first()[BATTERY_PROMPT_DISMISSED] ?: false
+
+    suspend fun setBatteryPromptDismissed() {
+        context.dataStore.edit { prefs -> prefs[BATTERY_PROMPT_DISMISSED] = true }
+    }
+
+    /** Called when real-time is (re)selected: the hint gets one fresh chance. */
+    suspend fun resetBatteryPromptDismissed() {
+        context.dataStore.edit { prefs -> prefs[BATTERY_PROMPT_DISMISSED] = false }
     }
 
     suspend fun setLastChecked(millis: Long) {

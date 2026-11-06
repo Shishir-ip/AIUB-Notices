@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.github.shishirip.aiubnotices.BuildConfig
 import io.github.shishirip.aiubnotices.R
+import io.github.shishirip.aiubnotices.work.PollScheduler
 
 private const val REPO_URL = "https://github.com/Shishir-ip/AIUB-Notices"
 
@@ -99,7 +101,7 @@ fun SettingsScreen(state: UiState, viewModel: AppViewModel) {
                     )
                 }
                 SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-                    val options = listOf(15, 30, 60)
+                    val options = listOf(15, 30, 60, PollScheduler.REALTIME_INTERVAL)
                     options.forEachIndexed { index, minutes ->
                         SegmentedButton(
                             selected = state.pollIntervalMinutes == minutes,
@@ -109,7 +111,54 @@ fun SettingsScreen(state: UiState, viewModel: AppViewModel) {
                                 count = options.size,
                             ),
                         ) {
-                            Text("$minutes min")
+                            Text(
+                                text = if (minutes == PollScheduler.REALTIME_INTERVAL) {
+                                    stringResource(R.string.settings_interval_realtime)
+                                } else {
+                                    "$minutes min"
+                                },
+                                style = MaterialTheme.typography.labelMedium,
+                                maxLines = 1,
+                            )
+                        }
+                    }
+                }
+
+                if (state.batteryPromptVisible) {
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.medium,
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            Text(
+                                text = stringResource(R.string.settings_battery_prompt),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End,
+                            ) {
+                                TextButton(onClick = viewModel::dismissBatteryPrompt) {
+                                    Text(
+                                        text = stringResource(R.string.settings_battery_skip),
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                    )
+                                }
+                                TextButton(onClick = viewModel::requestIgnoreBatteryOptimizations) {
+                                    Text(
+                                        text = stringResource(R.string.settings_battery_allow),
+                                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                        fontWeight = FontWeight.SemiBold,
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -143,10 +192,16 @@ fun SettingsScreen(state: UiState, viewModel: AppViewModel) {
             ) {
                 SectionTitle(text = stringResource(R.string.settings_status_section))
                 Text(
-                    text = if (state.notificationsEnabled) {
-                        stringResource(R.string.settings_background_check, state.pollIntervalMinutes)
-                    } else {
-                        stringResource(R.string.settings_background_check_off)
+                    text = when {
+                        !state.notificationsEnabled -> {
+                            stringResource(R.string.settings_background_check_off)
+                        }
+                        state.pollIntervalMinutes == PollScheduler.REALTIME_INTERVAL -> {
+                            stringResource(R.string.settings_background_check_realtime)
+                        }
+                        else -> {
+                            stringResource(R.string.settings_background_check, state.pollIntervalMinutes)
+                        }
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,

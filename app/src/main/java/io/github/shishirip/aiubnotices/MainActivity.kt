@@ -8,10 +8,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import io.github.shishirip.aiubnotices.ui.AiubNoticesApp
+import io.github.shishirip.aiubnotices.ui.AppViewModel
 import io.github.shishirip.aiubnotices.ui.theme.AiubNoticesTheme
 
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: AppViewModel by viewModels()
 
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -28,6 +32,13 @@ class MainActivity : ComponentActivity() {
                 AiubNoticesApp()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Re-evaluate the real-time battery hint after returning from the
+        // system battery dialog.
+        viewModel.refreshBatteryState()
     }
 
     /** POST_NOTIFICATIONS is a runtime permission on Android 13+. */

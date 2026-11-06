@@ -26,30 +26,40 @@ class NoticePollWorker(
 
         val settings = store.settings.first()
 
-        val outcome = try {
-            repository.sync { newNotices ->
+        val result: Result = try {
+            val outcome = repository.sync { newNotices ->
                 if (settings.notificationsEnabled) {
                     notifier.notifyNewNotices(newNotices)
                 }
             }
+            if (outcome == null) {
+                // Page fetched but zero notices parsed — the site is probably
+                // down or the layout changed. Skip this cycle; touch nothing.
+                Log.w(TAG, "Poll skipped: zero notices parsed")
+                Result.success()
+            } else {
+                Log.i(
+                    TAG,
+                    "Poll ok: ${outcome.notices.size} notices, ${outcome.newNotices.size} new" +
+                        if (outcome.wasBaseline) " (baseline recorded)" else "",
+                )
+                Result.success()
+            }
         } catch (e: Exception) {
             Log.w(TAG, "Poll failed (attempt $runAttemptCount): ${e.message}")
-            return if (runAttemptCount < MAX_ATTEMPTS) Result.retry() else Result.failure()
+            if (runAttemptCount < MAX_ATTEMPTS) Result.retry() else Result.failure()
         }
 
-        if (outcome == null) {
-            // Page fetched but zero notices parsed — the site is probably down
-            // or the layout changed. Skip this cycle; touch nothing.
-            Log.w(TAG, "Poll skipped: zero notices parsed")
-            return Result.success()
+        // Keep the real-time chain alive on every terminal outcome. Retries
+        // re-run this same work, so they don't need a new link.
+        if (result !is Result.Retry &&
+            settings.notificationsEnabled &&
+            settings.pollIntervalMinutes == PollScheduler.REALTIME_INTERVAL
+        ) {
+            PollScheduler.scheduleNextRealtimePoll(applicationContext, id)
         }
 
-        Log.i(
-            TAG,
-            "Poll ok: ${outcome.notices.size} notices, ${outcome.newNotices.size} new" +
-                if (outcome.wasBaseline) " (baseline recorded)" else "",
-        )
-        return Result.success()
+        return result
     }
 
     private companion object {

@@ -21,7 +21,7 @@
 **AIUB Notices** fixes that with zero accounts, zero servers and zero tracking:
 
 - 🔔 **Phone notifications** for every new notice (heads-up, importance HIGH)
-- 🗓️ **Background polling** every 15/30/60 minutes via WorkManager — even when the app is closed
+- 🗓️ **Background polling** every 15/30/60 minutes via WorkManager — or a **real-time mode** that checks about once a minute so notifications land as fast as the device allows
 - 📰 **Offline notice list** — the latest 30 notices are cached locally with DataStore
 - 🌐 **One-tap open** — tapping a notice (or its notification) opens the official page in your browser
 - 🚫 **No spam** — a baseline run marks everything as seen on first launch; at most 5 notifications per poll; grouped under one summary when several arrive together
@@ -76,6 +76,8 @@ Reliability rules baked in:
 - HTTP ≠ 200 or **zero notices parsed** → the cycle is skipped and logged, nothing is marked or cleared
 - Network failures → WorkManager `Result.retry()` with `BackoffPolicy.EXPONENTIAL`
 - Periodic work is **not expedited**, so Android may defer it under Doze — notifications can arrive late, by design
+- **Real-time mode** is a self-rescheduling chain of one-minute one-time checks (WorkManager's periodic floor is 15 minutes). The chain re-reads settings on every run and stops by itself when you switch modes. Android may still defer checks under Doze — so when you pick real-time, Settings shows a small **skippable** prompt to allow the app to run without battery restrictions (one tap in the system dialog; skipping just hides the prompt).
+
 - Manual "Refresh now" + pull-to-refresh always work when the app is open (and are silent — you're already looking at the list)
 
 ---
@@ -87,12 +89,12 @@ Reliability rules baked in:
 | Language | Kotlin, minSdk 26 · targetSdk 35 |
 | UI | Jetpack Compose + Material 3 (dark by default, AIUB blue accent) |
 | HTML parsing | [Jsoup](https://jsoup.org) |
-| Background work | [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager) periodic (15/30/60 min, CONNECTED constraint) |
+| Background work | [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager): periodic (15/30/60 min) or real-time chain (~1 min, CONNECTED constraint) |
 | Persistence | [DataStore Preferences](https://developer.android.com/topic/libraries/architecture/datastore) (seen-set, cache, settings) |
 | Notifications | NotificationCompat, single HIGH-importance channel, grouped summaries |
 | Tests | JUnit 4 + a saved HTML fixture of the real page |
 
-**Permissions:** only `INTERNET` and `POST_NOTIFICATIONS`. No backend, no accounts, no analytics.
+**Permissions:** `INTERNET` and `POST_NOTIFICATIONS`, plus `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` (optional — only used to show the system battery dialog for real-time mode; the user can always decline or skip). No backend, no accounts, no analytics.
 
 ---
 
@@ -149,6 +151,7 @@ The repository intentionally does **not** contain the release keystore. To build
 5. **Offline behavior** — enable airplane mode and refresh: an error banner appears, the cached list stays usable, the app does not crash. Background polls simply retry with backoff.
 6. **Test notification** — Settings → *Send test notification* posts a sample instantly.
 7. **Interval** — Settings → pick 30 or 60 min; WorkManager reschedules (`adb shell dumpsys jobscheduler | grep aiub` shows the updated periodic job).
+8. **Real-time mode** — Settings → pick *Real-time*: an immediate check runs, then roughly one per minute. If battery optimization is still on, a small prompt appears with **Allow** / **Skip**. *Allow* opens the one-tap system dialog (recommended for real-time reliability); *Skip* hides the prompt until you re-select real-time. Switching back to 15/30/60 min stops the chain automatically.
 
 ---
 
