@@ -1,10 +1,12 @@
 <div align="center">
 
-# 📢 AIUB Notices
+# 📢 AIUB Notices App
 
-**A native Android app that watches the official AIUB notice board — and taps you on the shoulder the moment something new is posted.**
+**The free, open-source AIUB notice app for Android — it watches the official [AIUB notice board](https://www.aiub.edu/category/notices) and taps you on the shoulder the moment something new is posted.**
 
-No login · No backend · No tracking · Fully offline-capable
+**AIUB Notices App** monitors the notice board of **American International University-Bangladesh (AIUB)** and sends an instant Android notification whenever a new notice is published — exam routines, payment deadlines, scholarship lists, convocation updates — so you never have to keep re-checking the website yourself. No login · No backend · No tracking · Fully offline-capable.
+
+🌐 **Website:** [shishir-ip.github.io/AIUB-Notices](https://shishir-ip.github.io/AIUB-Notices/) · ⬇️ **[Download the latest APK](https://github.com/Shishir-ip/AIUB-Notices/releases/latest)**
 
 [![CI](https://github.com/Shishir-ip/AIUB-Notices/actions/workflows/android-ci.yml/badge.svg)](https://github.com/Shishir-ip/AIUB-Notices/actions/workflows/android-ci.yml)
 [![Release](https://img.shields.io/github/v/release/Shishir-ip/AIUB-Notices?logo=github)](https://github.com/Shishir-ip/AIUB-Notices/releases)
@@ -14,7 +16,7 @@ No login · No backend · No tracking · Fully offline-capable
 
 | Notices — live from aiub.edu | Settings | Real-time mode | Heads-up notification |
 |:---:|:---:|:---:|:---:|
-| <img src="docs/screenshots/notices.png" width="240"/> | <img src="docs/screenshots/settings.png" width="240"/> | <img src="docs/screenshots/realtime.png" width="240"/> | <img src="docs/screenshots/notification.png" width="240"/> |
+| <img src="docs/screenshots/notices.png" width="240" alt="AIUB Notices App notice list screen showing live AIUB notices"/> | <img src="docs/screenshots/settings.png" width="240" alt="AIUB Notices App settings screen with poll interval options"/> | <img src="docs/screenshots/realtime.png" width="240" alt="AIUB Notices App real-time mode with battery optimization prompt"/> | <img src="docs/screenshots/notification.png" width="240" alt="AIUB Notices App heads-up notification in the Android notification shade"/> |
 
 </div>
 
@@ -179,6 +181,48 @@ The repository intentionally does **not** contain the release keystore. To build
 6. **Real-time mode** — Settings → pick *Real-time*: an immediate check runs, then roughly one per minute. The battery prompt appears once — *Allow* is recommended for reliability; *Skip* hides it. Switching back to 15/30/60 min stops the chain automatically.
 7. **Offline behavior** — enable airplane mode and refresh: an error banner appears, the cached list stays usable, the app does not crash. Background polls retry with backoff.
 8. **Interval change** — pick 30 or 60 min; WorkManager reschedules (`adb shell dumpsys jobscheduler | grep aiub` shows the updated job).
+
+## ❓ FAQ
+
+<details>
+<summary><strong>What is AIUB Notices App?</strong></summary>
+<br>
+
+AIUB Notices App is a free, open-source Android app that watches the official AIUB notice board (aiub.edu) in the background and sends you a phone notification the moment a new notice is posted — exam schedules, fee deadlines, results, scholarships, convocation news and more.
+
+</details>
+
+<details>
+<summary><strong>Is AIUB Notices App an official AIUB app?</strong></summary>
+<br>
+
+No. It is an unofficial, open-source student project maintained on GitHub and is not affiliated with or endorsed by American International University-Bangladesh. It only reads the public notice board — politely, with one request per check.
+
+</details>
+
+<details>
+<summary><strong>How do I download the AIUB notice app?</strong></summary>
+<br>
+
+Grab the signed APK from the [latest GitHub release](https://github.com/Shishir-ip/AIUB-Notices/releases/latest) and install it on any Android 8.0+ phone. The app is not on Google Play.
+
+</details>
+
+<details>
+<summary><strong>Is the AIUB notice app free? Does it have ads or accounts?</strong></summary>
+<br>
+
+Yes, it's completely free — MIT-licensed open source, no ads, no accounts, no analytics, and it talks to no server except aiub.edu itself.
+
+</details>
+
+<details>
+<summary><strong>Does AIUB Notices App drain battery or work offline?</strong></summary>
+<br>
+
+It's battery-friendly by design: one lightweight request per poll using WorkManager (15/30/60-minute or real-time mode). The latest 30 notices are cached on-device, so the notice list works fully offline.
+
+</details>
 
 ## ⚖️ License & disclaimer
 

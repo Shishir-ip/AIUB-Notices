@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AIUB Notices App — Instant AIUB Notice Board Notifications on Android</title>
+  <meta name="description" content="AIUB Notices App is a free, open-source Android app that instantly notifies you when the official AIUB (American International University-Bangladesh) notice board posts a new notice. Download the AIUB notice app APK free from GitHub.">
+  <meta name="keywords" content="AIUB notice app, AIUB notices app, AIUB notice board app, AIUB notices, AIUB notification app, AIUB android app, American International University-Bangladesh notices, AIUB notice download">
+  <link rel="canonical" href="https://shishir-ip.github.io/AIUB-Notices/">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#004EA2">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AIUB Notices App">
+  <meta property="og:title" content="AIUB Notices App — Instant AIUB Notice Board Notifications on Android">
+  <meta property="og:description" content="Free & open-source Android app that sends you a notification the moment the official AIUB notice board posts a new notice. Download the APK from GitHub.">
+  <meta property="og:url" content="https://shishir-ip.github.io/AIUB-Notices/">
+  <meta property="og:image" content="https://shishir-ip.github.io/AIUB-Notices/screenshots/notices.png">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AIUB Notices App — Instant AIUB Notice Board Notifications">
+  <meta name="twitter:description" content="Free & open-source Android app that notifies you the moment the official AIUB notice board posts a new notice.">
+  <meta name="twitter:image" content="https://shishir-ip.github.io/AIUB-Notices/screenshots/notices.png">
+
+  <!-- Structured data: app -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AIUB Notices App",
+    "alternateName": "AIUB Notices",
+    "operatingSystem": "Android 8.0+",
+    "applicationCategory": "MobileApplication",
+    "description": "AIUB Notices App is a free, open-source Android app that instantly notifies you when the official AIUB (American International University-Bangladesh) notice board posts a new notice.",
+    "url": "https://shishir-ip.github.io/AIUB-Notices/",
+    "downloadUrl": "https://github.com/Shishir-ip/AIUB-Notices/releases/latest",
+    "softwareVersion": "1.1.0",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Shohidul Islam" },
+    "license": "https://opensource.org/licenses/MIT",
+    "isAccessibleForFree": true
+  }
+  </script>
+
+  <!-- Structured data: FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is AIUB Notices App?",
+        "acceptedAnswer": { "@type": "Answer", "text": "AIUB Notices App is a free, open-source Android app that watches the official AIUB notice board (aiub.edu) in the background and sends you a phone notification the moment a new notice is posted — exam schedules, fee deadlines, results, scholarships and convocation news." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is AIUB Notices App an official AIUB app?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. It is an unofficial, open-source student project and is not affiliated with or endorsed by American International University-Bangladesh. It only reads the public notice board, politely, with one request per check." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I download the AIUB notice app?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Download the signed APK from the GitHub releases page and install it on any Android 8.0+ phone." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the AIUB notice app free?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes — it is completely free, MIT-licensed open source, with no ads, no accounts and no analytics." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does AIUB Notices App drain battery or work offline?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It is battery-friendly by design: one lightweight request per poll using WorkManager (15/30/60-minute or real-time mode). The latest 30 notices are cached on-device, so the notice list works fully offline." }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #0E1116; --surface: #171C24; --surface2: #1E2530;
+      --text: #E1E6EE; --muted: #AAB4C2; --accent: #004EA2;
+      --accent-light: #8FB8FF; --border: #262E3A;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+      line-height: 1.6;
+    }
+    a { color: var(--accent-light); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1020px; margin: 0 auto; padding: 0 20px; }
+
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; background: rgba(14,17,22,.92); backdrop-filter: blur(8px); z-index: 10;
+    }
+    nav .brand { font-weight: 700; color: var(--text); font-size: 1.05rem; }
+    nav .links a { margin-left: 18px; font-size: .95rem; }
+
+    .hero { text-align: center; padding: 72px 20px 48px; }
+    .hero .bell {
+      width: 84px; height: 84px; margin: 0 auto 22px; border-radius: 50%;
+      background: var(--accent); display: flex; align-items: center; justify-content: center;
+      font-size: 40px; box-shadow: 0 8px 30px rgba(0,78,162,.45);
+    }
+    .hero h1 { font-size: clamp(2rem, 6vw, 3rem); margin-bottom: 14px; letter-spacing: -.5px; }
+    .hero .tagline { font-size: clamp(1.05rem, 2.6vw, 1.3rem); color: var(--text); max-width: 640px; margin: 0 auto 10px; }
+    .hero .sub { color: var(--muted); max-width: 620px; margin: 0 auto 30px; }
+    .btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn { padding: 13px 26px; border-radius: 12px; font-weight: 600; font-size: 1rem; display: inline-block; }
+    .btn.primary { background: var(--accent); color: #fff; }
+    .btn.primary:hover { background: #0060c8; text-decoration: none; }
+    .btn.ghost { border: 1px solid var(--border); color: var(--text); background: var(--surface); }
+    .btn.ghost:hover { border-color: var(--accent-light); text-decoration: none; }
+    .pills { margin-top: 26px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .pill { font-size: .8rem; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 5px 14px; background: var(--surface); }
+
+    h2 { font-size: 1.6rem; margin: 0 0 26px; text-align: center; }
+    section { padding: 56px 0; }
+    .shots { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; }
+    .shots figure { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 10px; }
+    .shots img { width: 100%; border-radius: 10px; display: block; }
+    .shots figcaption { text-align: center; font-size: .85rem; color: var(--muted); padding-top: 10px; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+    .card h3 { font-size: 1.05rem; margin-bottom: 8px; }
+    .card p { color: var(--muted); font-size: .93rem; }
+    .card .ico { font-size: 1.5rem; display: block; margin-bottom: 10px; }
+
+    .steps { max-width: 720px; margin: 0 auto; }
+    .step { display: flex; gap: 16px; margin-bottom: 18px; }
+    .step .n { flex: 0 0 34px; height: 34px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .step p { color: var(--muted); }
+    .step b { color: var(--text); }
+
+    details { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; padding: 16px 20px; max-width: 780px; margin-inline: auto; }
+    details summary { cursor: pointer; font-weight: 600; }
+    details p { color: var(--muted); margin-top: 10px; font-size: .95rem; }
+
+    footer { border-top: 1px solid var(--border); padding: 34px 20px 50px; text-align: center; color: var(--muted); font-size: .88rem; }
+    footer .warn { margin-top: 10px; font-size: .8rem; opacity: .8; }
+    @media (max-width: 560px) { .hero { padding-top: 52px; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">🔔 AIUB Notices App</span>
+  <span class="links">
+    <a href="#features">Features</a>
+    <a href="#faq">FAQ</a>
+    <a href="https://github.com/Shishir-ip/AIUB-Notices">GitHub</a>
+    <a href="https://github.com/Shishir-ip/AIUB-Notices/releases/latest" style="color:#fff;background:var(--accent);padding:8px 16px;border-radius:10px;font-weight:600">Download</a>
+  </span>
+</nav>
+
+<header class="hero">
+  <div class="bell">🔔</div>
+  <h1>AIUB Notices App</h1>
+  <p class="tagline">Get an instant notification whenever the official <strong>AIUB notice board</strong> posts a new notice.</p>
+  <p class="sub">AIUB Notices App is a free, open-source Android app for students of American International University-Bangladesh. No login. No ads. No backend. Fully offline-capable.</p>
+  <div class="btns">
+    <a class="btn primary" href="https://github.com/Shishir-ip/AIUB-Notices/releases/latest">⬇️ Download the APK</a>
+    <a class="btn ghost" href="https://github.com/Shishir-ip/AIUB-Notices">⭐ View source on GitHub</a>
+  </div>
+  <div class="pills">
+    <span class="pill">Android 8.0+</span><span class="pill">Kotlin · Jetpack Compose</span>
+    <span class="pill">MIT License</span><span class="pill">No account needed</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="screenshots">
+    <h2>See the app</h2>
+    <div class="shots">
+      <figure><img src="screenshots/notices.png" alt="AIUB Notices App screenshot: notice list with live AIUB notices" loading="lazy"><figcaption>Live notice list</figcaption></figure>
+      <figure><img src="screenshots/settings.png" alt="AIUB Notices App screenshot: settings with 15/30/60-minute poll intervals" loading="lazy"><figcaption>Flexible polling</figcaption></figure>
+      <figure><img src="screenshots/realtime.png" alt="AIUB Notices App screenshot: real-time mode with battery optimization prompt" loading="lazy"><figcaption>Real-time mode</figcaption></figure>
+      <figure><img src="screenshots/notification.png" alt="AIUB Notices App screenshot: heads-up notification in the Android shade" loading="lazy"><figcaption>Instant alerts</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="features">
+    <h2>Why students use AIUB Notices App</h2>
+    <div class="grid">
+      <div class="card"><span class="ico">🔔</span><h3>Instant notifications</h3><p>A heads-up alert the moment a new notice is posted — exam routines, fee deadlines, results, scholarships, convocation updates.</p></div>
+      <div class="card"><span class="ico">⚡</span><h3>Real-time mode</h3><p>Choose checks every 15/30/60 minutes — or real-time, roughly once a minute, for the fastest possible alert.</p></div>
+      <div class="card"><span class="ico">📰</span><h3>Works offline</h3><p>The latest 30 notices are cached on your phone, so the list is there even in airplane mode.</p></div>
+      <div class="card"><span class="ico">🌐</span><h3>One-tap open</h3><p>Tap any notice or notification to open the official page on aiub.edu instantly.</p></div>
+      <div class="card"><span class="ico">🔋</span><h3>Battery friendly</h3><p>One polite request per check with WorkManager and Doze-respecting scheduling. No servers, no accounts, no tracking.</p></div>
+      <div class="card"><span class="ico">🛡️</span><h3>Open source</h3><p>MIT-licensed on GitHub. Audit every line — the app talks to nothing but aiub.edu.</p></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><p><b>Download & install.</b> Grab the APK from <a href="https://github.com/Shishir-ip/AIUB-Notices/releases/latest">GitHub Releases</a> and install it on any Android 8.0+ phone.</p></div>
+      <div class="step"><span class="n">2</span><p><b>Baseline.</b> On first launch the app silently marks everything currently on the AIUB notice board as seen — you only get notified about genuinely new notices.</p></div>
+      <div class="step"><span class="n">3</span><p><b>Relax.</b> The app checks the board in the background and buzzes you the moment something new appears. Pick your speed in Settings.</p></div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <h2>FAQ</h2>
+    <details open><summary>What is AIUB Notices App?</summary><p>A free, open-source Android app that watches the official AIUB notice board (aiub.edu) in the background and sends you a phone notification the moment a new notice is posted — exam schedules, fee deadlines, results, scholarships and convocation news.</p></details>
+    <details><summary>Is AIUB Notices App an official AIUB app?</summary><p>No. It is an unofficial, open-source student project and is not affiliated with or endorsed by American International University-Bangladesh. It only reads the public notice board, politely, with one request per check.</p></details>
+    <details><summary>How do I download the AIUB notice app?</summary><p>Download the signed APK from the <a href="https://github.com/Shishir-ip/AIUB-Notices/releases/latest">GitHub releases page</a> and install it on any Android 8.0+ phone.</p></details>
+    <details><summary>Is the AIUB notice app free?</summary><p>Yes — completely free, MIT-licensed open source, no ads, no accounts, no analytics.</p></details>
+    <details><summary>Does AIUB Notices App drain battery or work offline?</summary><p>It's battery-friendly by design: one lightweight request per poll using WorkManager (15/30/60-minute or real-time mode). The latest 30 notices are cached on-device, so the notice list works fully offline.</p></details>
+  </section>
+</main>
+
+<footer>
+  <p><b>AIUB Notices App</b> · <a href="https://github.com/Shishir-ip/AIUB-Notices">GitHub</a> · <a href="https://github.com/Shishir-ip/AIUB-Notices/releases/latest">Download</a> · MIT License</p>
+  <p class="warn">Unofficial open-source student project — not affiliated with or endorsed by American International University-Bangladesh (AIUB).</p>
+</footer>
+
+</body>
+</html>
